@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <title>Register/Login</title>
+    <meta charset="UTF-8">
+    <style>
+        /* 设置表单样式 */
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 60px;
+            background-color: #f2f2f2;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 设置表单元素样式 */
+        label, input {
+            display: block;
+            margin-bottom: 10px;
+            margin-left: 50px;
+        }
+
+        input[onclick] {
+            background-color: #4a7698;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        input[onclick]:hover {
+            background-color: #5c48e1;
+        }
+    </style>
+</head>
+<body>
+<form action="/register" method="POST">
+    <h2 style="text-align: center">Register/Login</h2>
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required>
+
+    <input type="submit" value="Register" style="float:left" onclick="return validateRegister()">
+    <input type="button" value="Login" style="float:right;margin-right: 70px" onclick="redirectToLogin()">
+</form>
+<script>
+    function validateRegister() {
+        var name = document.getElementById("name").value;
+        var email = document.getElementById("email").value;
+        var password = document.getElementById("password").value;
+        // 简单的验证逻辑，确保所有字段都有值
+        if (name && email && password) {
+
+            alert(" {% print(message) %} ")
+            {#return true; // 允许表单提交#}
+        } else {
+            alert("请填写完整的注册信息！");
+            {#return false; // 阻止表单提交#}
+        }
+    }
+
+    function redirectToLogin() {
+        window.location.href = "/login";
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="utf-8">
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport'/>
+
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width"/>
+    <title>About - Botany Template</title>
+    <meta name="keywords" content=""/>
+    <meta name="description" content=""/>
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="../static/css/templatemo_style.css" rel="stylesheet" type="text/css">
+
+    <style>
+        table {
+            width: 90%;
+            margin: 20px auto;
+            background-color: rgb(248, 249, 250)
+        }
+
+        table tr:nth-child(1) {
+            background-color: orangered;
+            color: white
+        }
+
+        table tr td {
+            padding: 5px 0;
+            text-align: center
+        }
+
+        table tr:not(:first-child):hover {
+            background-color: #ccc
+        }
+    </style>
+</head>
+<body class="templatemo_flower_2">
+<div id="main_container">
+    <div class="container" id="about">
+        <div class="row col-wrap">
+            <div id="left_container" class="col col-md-3 col-sm-12">
+                <div class="templatemo_logo">
+                    <a href="#"><img src="../static/images/templatemo_logo.png" alt="Botany Theme"></a>
+                </div>
+                <nav id="main_nav">
+                    <ul class="nav">
+                        <li><a href="/index">首页</a></li>
+                        <li class="active"><a href="/about">数据收集</a></li>
+                        <li><a href="/services">未来天气预报</a></li>
+                        <li><a href="/portfolio">空气质量</a></li>
+                        <li><a href="/contact">全年空气质量总和分析</a></li>
+                    </ul>
+                </nav> <!-- nav -->
+
+            </div>
+            <div id="right_container" class="col col-md-9 col-sm-12">
+                <div class="row">
+                    <div class="col col-md-12"><h2>上海天气数据收集</h2></div>
+                </div>
+                <label for="tableSelector" style="color: #af7360">请选择表格</label>
+                <select id="tableSelector">
+                    <option value="air_quality" {% if selected_table == 'air_quality' %}selected{% endif %}>
+                        2022年空气质量数据
+                    </option>
+                    <option value="weather_hourly" {% if selected_table == 'weather_hourly' %}selected{% endif %}>
+                        未来24小时天气预报
+                    </option>
+                    <option value="weather_daily" {% if selected_table == 'weather_daily' %}selected{% endif %}>
+                        未来14日天气预报
+                    </option>
+                </select>
+                <div id="tableContainer">
+                    <div id="air_quality_container" class="table-container">
+
+                        <!-- Air Quality Table -->
+                        <table id="air_quality" class="data-table"
+                               {% if selected_table == 'weather_hourly' or selected_table == 'weather_daily' %}style="display: none;"{% endif %}>
+
+                            <!-- Table headers -->
+                            <tr id="table_headers_headers">
+                                <td>日期</td>
+                                <td>空气质量</td>
+                                <td>AOI</td>
+                                <td>PM2.5</td>
+                                <td>PM10</td>
+                                <td>SO2</td>
+                                <td>NO2</td>
+                                <td>CO</td>
+                                <td>O3</td>
+                            </tr>
+                            {% for v in content %}
+                                <tr id="table_headers_content">
+                                    <td>{{ v[0] }}</td>
+                                    <td>{{ v[1] }}</td>
+                                    <td>{{ v[2] }}</td>
+                                    <td>{{ v[3] }}</td>
+                                    <td>{{ v[4] }}</td>
+                                    <td>{{ v[5] }}</td>
+                                    <td>{{ v[6] }}</td>
+                                    <td>{{ v[7] }}</td>
+                                    <td>{{ v[8] }}</td>
+                                    <td>{{ v[9] }}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                        {{ current_page.links }} {# Pagination bar #}
+                    </div>
+                    <div id="weather_hourly_container" class="table-container"
+                         {% if selected_table != 'weather_hourly' %}style="display: none;"{% endif %}>
+
+                        <!-- Weather Hourly Table -->
+                        <table id="weather_hourly" class="data-table">
+                            <!-- Table headers -->
+                            <tr id="weather_hourly_headers">
+                                <td>小时</td>
+                                <td>温度</td>
+                                <td>风力方向</td>
+                                <td>风级</td>
+                                <td>降水量</td>
+                                <td>相对湿度</td>
+                                <td>空气质量</td>
+                            </tr>
+                            {% for v in content %}
+                                <tr id="weather_hourly_content">
+                                    <td>{{ v[0] }}</td>
+                                    <td>{{ v[1] }}</td>
+                                    <td>{{ v[2] }}</td>
+                                    <td>{{ v[3] }}</td>
+                                    <td>{{ v[4] }}</td>
+                                    <td>{{ v[5] }}</td>
+                                    <td>{{ v[6] }}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                    <div id="weather_daily_container" class="table-container"
+                         {% if selected_table != 'weather_daily' %}style="display: none;"{% endif %}>
+                        <!-- Weather Daily Table -->
+                        <table id="weather_daily" class="data-table">
+                            <!-- Table headers -->
+                            <tr id="weather_daily_headers">
+                                <td>日期</td>
+                                <td>天气</td>
+                                <td>最低气温</td>
+                                <td>最高气温</td>
+                                <td>风向1</td>
+                                <td>风向2</td>
+                                <td>风级</td>
+                            </tr>
+                            {% for v in content %}
+                                <tr id="weather_daily_content">
+                                    <td>{{ v[0] }}</td>
+                                    <td>{{ v[1] }}</td>
+                                    <td>{{ v[2] }}</td>
+                                    <td>{{ v[3] }}</td>
+                                    <td>{{ v[4] }}</td>
+                                    <td>{{ v[5] }}</td>
+                                    <td>{{ v[6] }}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script>
+        // Listen for dropdown change event
+        document.getElementById("tableSelector").addEventListener("change", function () {
+            var selectedTable = this.value; // 获取所选表格的值
+            window.location.href = "/about?table=" + selectedTable;
+        });
+    </script>
+    <footer class="row credit">
+        <div class="col col-md-12">
+            <div id="templatemo_footer">
+                © 2024.All rights reserved.
+            </div>
+        </div>
+    </footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport'/>
+    <meta name="viewport" content="width=device-width"/>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <title>Services - Botany Template</title>
+    <meta name="keywords" content=""/>
+    <meta name="description" content=""/>
+
+    <link href="../static/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="../static/css/templatemo_style.css" rel="stylesheet" type="text/css">
+
+</head>
+<body class="templatemo_flower_1">
+<div id="main_container">
+    <div class="container" id="services">
+        <div class="row col-wrap">
+            <div id="left_container" class="col col-md-3 col-sm-12">
+                <div class="templatemo_logo">
+                    <a href="#"><img src="../static/images/templatemo_logo.png" alt="Botany Theme"></a>
+                </div>
+                <nav id="main_nav">
+                    <ul class="nav">
+                        <li><a href="/index">首页</a></li>
+                        <li><a href="/about">数据收集</a></li>
+                        <li class="active"><a href="/services">未来天气预报</a></li>
+                        <li><a href="/portfolio">空气质量</a></li>
+                        <li><a href="/contact">全年空气质量总和分析</a></li>
+                    </ul>
+                </nav> <!-- nav -->
+                <form action="#" method="get" class="navbar-form" role="search">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search" id="keyword" name="keyword">
+                    </div>
+                    <button type="submit" class="btn btn-primary" name="Search">Go</button>
+                </form>
+                <div>
+                    <a href="#"><img src="../static/images/facebook.png" alt="Like us on Facebook"></a>
+                    <a href="#"><img src="../static/images/twitter.png" alt="Follow us on Twitter"></a>
+                    <a href="#"><img src="../static/images/rss.png" alt="RSS feeds"></a>
+                </div>
+            </div>
+            <div id="right_container" class="col-md-9 col-sm-12">
+        <div class="row">
+            <div class="col col-md-12">
+            <h2>Weather Forecast</h2>
+        </div>
+        <label for="chartType" style="color: #af7360">Select Chart Type:</label>
+        <select id="chartType" name="chart_type">
+            <option value="next_24_hours" {% if chart_type == 'next_24_hours' %}selected{% endif %}>Next 24 Hours</option>
+              <option value="next_14_days" {% if chart_type == 'next_14_days' %}selected{% endif %}>Next 14 Days</option>
+        </select>
+        <div id="myChart">
+            {{ myechart|safe }}
+        </div>
+    </div>
+</div>
+
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('load', (_) => {
+
+            document.getElementById("chartType").addEventListener("change", function () {
+                var selectedChartType = this.value;
+                console.log("Selected chart type:", selectedChartType);  // 打印选择的图表类型
+                window.location.href = "/services?chart_type=" + selectedChartType;
+        });
+    });
+    </script>
+    <footer class="row credit">
+        <div class="col col-md-12">
+            <div id="templatemo_footer">
+                © 2024.All rights reserved.
+            </div>
+        </div>
+    </footer>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

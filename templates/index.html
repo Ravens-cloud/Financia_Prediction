@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="">
+<style>
+    /* 设置注册按钮样式 */
+    .register-button {
+        position: absolute;
+        top: 10px;
+        right: 0;
+        color: #af7360;
+        font-size: large;
+    }
+
+    .register-button img {
+        background-color: #af7360; /* 设置背景颜色为灰色 */
+        width: 20%;
+        height: 20%;
+        display: inline-block; /* 可选，使容器适应图片大小 */
+    }
+    .link h3 {
+        text-decoration: underline;
+    }
+    .link:hover h3{
+        color: #af7360; /* 设置鼠标悬停时文字颜色 */
+    }
+</style>
+<head>
+    <meta charset="utf-8">
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport'/>
+    <meta name="viewport" content="width=device-width"/>
+    <title>Botany Template</title>
+    <meta name="keywords" content=""/>
+    <meta name="description" content=""/>
+
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="../static/css/templatemo_style.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="../static/css/flexslider.css" type="text/css" media="screen"/>
+
+    <!-- Modernizr -->
+    <script src="../static/slider/modernizr.js"></script>
+
+
+</head>
+<body class="templatemo_juice_bg">
+<form action="/register" method="post">
+    <div class="register-button">
+        <img src="../static/images/Screenshot 2023-12-07 124156.png">
+        <a href="/register" style="text-decoration: none;">注册/登录</a>
+    </div>
+</form>
+    <div id="main_container">
+        <div class="container" id="home">
+            <div class="row col-wrap">
+                <div id="left_container" class="col col-md-3 col-sm-12">
+                    <div class="templatemo_logo">
+                        <a href=""><img src="../static/images/templatemo_logo.png" alt="Botany Theme"></a>
+                    </div>
+                    <nav id="main_nav">
+                        <ul class="nav">
+                            <li class="active"><a href="/index">首页</a></li>
+                            <li><a href="/about">数据收集</a></li>
+                            <li><a href="/services">未来天气预报</a></li>
+                            <li><a href="/portfolio">空气质量</a></li>
+                            <li><a href="/contact">全年空气质量总和分析</a></li>
+                        </ul>
+                    </nav>
+                </div>
+                <div id="right_container" class="col col-md-9 col-sm-12">
+                    <div class="row">
+                        <div class="col col-md-12">
+
+                            <h2>天气数据分析平台</h2>
+                            <div class="flexslider">
+                                <ul class="slides">
+                                    <li><img src="../static/images/templatemo_slide_1.jpg" alt="slide 1"/></li>
+                                    <li><img src="../static/images/templatemo_slide_2.jpg" alt="slide 2"/></li>
+                                    <li><img src="../static/images/templatemo_slide_3.jpg" alt="slide 3"/></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    {% for v in data %}
+                        {% set i = loop.index %}
+                        <a href="https:/data.cma.cn//article/getServiceCaseDetail/serviceCode/{{ i }}/cateId/9.html"
+                           style="text-decoration: none;" class="link">
+                            <article class="row">
+                                <div class="col col-md-12">
+                                    <img src="{{ v[0] }}" alt="Pic 1" class="img-thumbnail img-responsive img_left">
+                                    <h3>{{ v[1] }}</h3>
+                                    <p>服务对象及范围:{{ v[2] }}</p>
+                                    <p><span>服务时间:{{ v[3] }}</span>&nbsp;&nbsp;</p>
+                                    <p><span>{{ v[4] }}</span></p>
+                                </div>
+                            </article>
+                        </a>
+                    {% endfor %}
+
+                </div>
+            </div>
+            <footer class="row credit">
+                <div class="col col-md-12">
+                    <div id="templatemo_footer">
+                        © 2024.All rights reserved.
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+
+    <script>window.jQuery || document.write('<script src="js/libs/jquery-1.7.min.js">\x3C/script>')</script>
+
+    <!-- FlexSlider -->
+    <script defer src="../static/slider/jquery.flexslider.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            SyntaxHighlighter.all();
+        });
+        $(window).load(function () {
+            $('.flexslider').flexslider({
+                animation: "slide",
+                start: function (slider) {
+                    $('body').removeClass('loading');
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
