@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="">
+<html lang="zh-CN">
 <head>
     <title>Login</title>
     <meta charset="UTF-8">
@@ -13,7 +13,12 @@
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-
+        .message {
+            color: #d9534f;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
         /* 设置表单元素样式 */
         label, input {
             display: block;
@@ -36,29 +41,32 @@
     </style>
 </head>
 <body>
-<form action="/login" method="POST">
-    <h2 style="text-align: center">Login</h2>
+    <form action="/login" method="POST">
+        <h2 style="text-align: center">Login</h2>
 
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" required>
+        {% if message %}
+            <p class="message">{{ message }}</p>
+        {% endif %}
 
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
 
-    <input type="submit" value="Login" style="float:left" onclick="validateLogin()">
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
 
-</form>
-<script>
+        <input type="submit" value="Login" style="float:left">
+    </form>
+
+  <script>
     function validateLogin() {
-        var email = document.getElementById("email").value;
-        var password = document.getElementById("password").value;
-
-        if (email && password) {
-            alert("{% print(message) %}")
-        } else {
-            alert("请填写完整的登录信息！");
-        }
+      var email = document.getElementById("log_email").value.trim();
+      var pwd   = document.getElementById("log_password").value.trim();
+      if (!email || !pwd) {
+        alert("请填写完整的登录信息！");
+        return false;
+      }
+      return true;
     }
-</script>
+  </script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="">
+<html lang="zh-CN">
 <head>
     <title>Register/Login</title>
     <meta charset="UTF-8">
@@ -13,7 +13,12 @@
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-
+        .message {
+            color: #d9534f;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
         /* 设置表单元素样式 */
         label, input {
             display: block;
@@ -21,7 +26,7 @@
             margin-left: 50px;
         }
 
-        input[onclick] {
+        input[type="submit"], input[type="button"] {
             background-color: #4a7698;
             color: #fff;
             border: none;
@@ -30,45 +35,38 @@
             cursor: pointer;
         }
 
-        input[onclick]:hover {
+        input[type="submit"]:hover,
+        input[type="button"]:hover {
             background-color: #5c48e1;
         }
     </style>
 </head>
 <body>
-<form action="/register" method="POST">
-    <h2 style="text-align: center">Register/Login</h2>
-    <label for="name">Name:</label>
-    <input type="text" id="name" name="name" required>
+  <form action="/register" method="POST">
+        <h2 style="text-align: center">Register/Login</h2>
 
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" required>
+        {% if message %}
+            <p class="message">{{ message }}</p>
+        {% endif %}
 
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
 
-    <input type="submit" value="Register" style="float:left" onclick="return validateRegister()">
-    <input type="button" value="Login" style="float:right;margin-right: 70px" onclick="redirectToLogin()">
-</form>
-<script>
-    function validateRegister() {
-        var name = document.getElementById("name").value;
-        var email = document.getElementById("email").value;
-        var password = document.getElementById("password").value;
-        // 简单的验证逻辑，确保所有字段都有值
-        if (name && email && password) {
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
 
-            alert(" {% print(message) %} ")
-            {#return true; // 允许表单提交#}
-        } else {
-            alert("请填写完整的注册信息！");
-            {#return false; // 阻止表单提交#}
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+
+        <input type="submit" value="Register" style="float:left; margin-left: 70px">
+        <input type="button" value="Login" style="float:right; margin-right: 70px" onclick="redirectToLogin()">
+    </form>
+
+    <script>
+        // 这个函数现在只是用于页面跳转
+        function redirectToLogin() {
+            window.location.href = "/login";
         }
-    }
-
-    function redirectToLogin() {
-        window.location.href = "/login";
-    }
-</script>
+    </script>
 </body>
 </html>

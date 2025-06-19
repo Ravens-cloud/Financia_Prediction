@@ -17,10 +17,10 @@
         display: inline-block; /* 可选，使容器适应图片大小 */
     }
     .link h3 {
-        text-decoration: underline;
+        text-decoration: none;
     }
     .link:hover h3{
-        color: #af7360; /* 设置鼠标悬停时文字颜色 */
+        color: #af8560; /* 设置鼠标悬停时文字颜色 */
     }
 </style>
 <head>
@@ -56,11 +56,11 @@
                     </div>
                     <nav id="main_nav">
                         <ul class="nav">
-                            <li class="active"><a href="/index">首页</a></li>
-                            <li><a href="/about">数据收集</a></li>
-                            <li><a href="/services">未来天气预报</a></li>
-                            <li><a href="/portfolio">空气质量</a></li>
-                            <li><a href="/contact">全年空气质量总和分析</a></li>
+                            <li class="active"><a href="/root">新闻首页</a></li>
+                            <li><a href="/about">数据展示</a></li>
+                            <li><a href="/services">静态图表</a></li>
+                            <li><a href="/portfolio">K线图</a></li>
+                            <li><a href="/contact">A股市场数据看板</a></li>
                         </ul>
                     </nav>
                 </div>
@@ -68,7 +68,7 @@
                     <div class="row">
                         <div class="col col-md-12">
 
-                            <h2>天气数据分析平台</h2>
+                            <h2>金融数据分析</h2>
                             <div class="flexslider">
                                 <ul class="slides">
                                     <li><img src="../static/images/templatemo_slide_1.jpg" alt="slide 1"/></li>
@@ -78,21 +78,20 @@
                             </div>
                         </div>
                     </div>
-                    {% for v in data %}
-                        {% set i = loop.index %}
-                        <a href="https:/data.cma.cn//article/getServiceCaseDetail/serviceCode/{{ i }}/cateId/9.html"
-                           style="text-decoration: none;" class="link">
-                            <article class="row">
-                                <div class="col col-md-12">
-                                    <img src="{{ v[0] }}" alt="Pic 1" class="img-thumbnail img-responsive img_left">
-                                    <h3>{{ v[1] }}</h3>
-                                    <p>服务对象及范围:{{ v[2] }}</p>
-                                    <p><span>服务时间:{{ v[3] }}</span>&nbsp;&nbsp;</p>
-                                    <p><span>{{ v[4] }}</span></p>
-                                </div>
-                            </article>
-                        </a>
-                    {% endfor %}
+           {% for item in data %}
+                <a href="{{ item.article_link }}" style="text-decoration: none;" >
+                <article class="row">
+                    <div class="col col-md-12">
+                        <img src="{{ item.image_url }}" alt="{{ item.title }}" class="img-thumbnail img-responsive img_left">
+                        <h3 class="link">{{ item.title }}</h3>
+                        <p>发布时间: {{ item.pub_time }}</p>
+                        <p>{{ item.summary }}</p>
+                    </div>
+                    </article>
+                </a>
+            {% else %}
+                <p>暂无新闻数据</p>
+            {% endfor %}
 
                 </div>
             </div>

@@ -44,141 +44,220 @@
                 </div>
                 <nav id="main_nav">
                     <ul class="nav">
-                        <li><a href="/index">首页</a></li>
-                        <li class="active"><a href="/about">数据收集</a></li>
-                        <li><a href="/services">未来天气预报</a></li>
-                        <li><a href="/portfolio">空气质量</a></li>
-                        <li><a href="/contact">全年空气质量总和分析</a></li>
+                        <li ><a href="/root">新闻首页</a></li>
+                        <li class="active"><a href="/about">数据展示</a></li>
+                        <li ><a href="/services">静态图表</a></li>
+                        <li ><a href="/portfolio">K线图</a></li>
+                        <li ><a href="/contact">A股市场数据看板</a></li>
                     </ul>
                 </nav> <!-- nav -->
 
             </div>
             <div id="right_container" class="col col-md-9 col-sm-12">
                 <div class="row">
-                    <div class="col col-md-12"><h2>上海天气数据收集</h2></div>
+                    <div class="col col-md-12"><h2>数据展示</h2></div>
                 </div>
-                <label for="tableSelector" style="color: #af7360">请选择表格</label>
-                <select id="tableSelector">
-                    <option value="air_quality" {% if selected_table == 'air_quality' %}selected{% endif %}>
-                        2022年空气质量数据
-                    </option>
-                    <option value="weather_hourly" {% if selected_table == 'weather_hourly' %}selected{% endif %}>
-                        未来24小时天气预报
-                    </option>
-                    <option value="weather_daily" {% if selected_table == 'weather_daily' %}selected{% endif %}>
-                        未来14日天气预报
-                    </option>
-                </select>
+
+                <!-- Main Table Selector Form -->
+                <form method="get" action="{{ url_for('about_page') }}" id="tableSelectorForm">
+                    <div class="form-group">
+                        <label for="tableSelector" style="color: #af7360">请选择表格</label>
+                        <select id="tableSelector" name="table" class="form-control mb-2" onchange="this.form.submit()">
+                            <option value="stock_history" {% if selected_table == 'stock_history' %}selected{% endif %}>
+                                股票历史数据
+                            </option>
+                            <option value="interest_rate" {% if selected_table == 'interest_rate' %}selected{% endif %}>
+                                央行利率决议报告
+                            </option>
+                        </select>
+                    </div>
+                </form>
+
                 <div id="tableContainer">
-                    <div id="air_quality_container" class="table-container">
+                    <!-- Stock History Section -->
+                    {% if selected_table == 'stock_history' %}
+                    <div id="stock_history_container">
+                        <form method="get" action="{{ url_for('about_page') }}">
+                            <input type="hidden" name="table" value="stock_history">
+                            <!-- Hidden inputs for start and end dates, to be populated by the date picker -->
+                            <input type="hidden" id="start_date_hidden" name="start_date" value="{{ query_params.start_date or '' }}">
+                            <input type="hidden" id="end_date_hidden" name="end_date" value="{{ query_params.end_date or '' }}">
 
-                        <!-- Air Quality Table -->
-                        <table id="air_quality" class="data-table"
-                               {% if selected_table == 'weather_hourly' or selected_table == 'weather_daily' %}style="display: none;"{% endif %}>
+                            <div class="form-row">
+                                <div class="col-md-4 mb-2">
+                                    <label for="symbol" style="color: #af7360">股票代码 (如 600905.SH)</label>
+                                    <input type="text" id="symbol" class="form-control" name="symbol" value="{{ query_params.symbol or '' }}" placeholder="请输入 A 股代码">
+                                </div>
+                                <div class="col-md-5 mb-2">
+                                    <label for="date-range-picker" style="color: #af7360">选择开始和结束日期</label>
+                                    <input type="text" id="date-range-picker" class="form-control" placeholder="请选择日期范围">
+                                </div>
+                                <div class="col-md-3 align-self-end mb-2">
+                                    <button type="submit" class="btn btn-primary btn-block">查询</button>
+                                </div>
+                            </div>
+                        </form>
 
-                            <!-- Table headers -->
-                            <tr id="table_headers_headers">
-                                <td>日期</td>
-                                <td>空气质量</td>
-                                <td>AOI</td>
-                                <td>PM2.5</td>
-                                <td>PM10</td>
-                                <td>SO2</td>
-                                <td>NO2</td>
-                                <td>CO</td>
-                                <td>O3</td>
-                            </tr>
-                            {% for v in content %}
-                                <tr id="table_headers_content">
-                                    <td>{{ v[0] }}</td>
-                                    <td>{{ v[1] }}</td>
-                                    <td>{{ v[2] }}</td>
-                                    <td>{{ v[3] }}</td>
-                                    <td>{{ v[4] }}</td>
-                                    <td>{{ v[5] }}</td>
-                                    <td>{{ v[6] }}</td>
-                                    <td>{{ v[7] }}</td>
-                                    <td>{{ v[8] }}</td>
-                                    <td>{{ v[9] }}</td>
-                                </tr>
-                            {% endfor %}
-                        </table>
-                        {{ current_page.links }} {# Pagination bar #}
+                        {% if error %}
+                            <div class="alert alert-danger mt-3">{{ error }}</div>
+                        {% endif %}
+
+                        {% if data is defined and data %}
+                            <table class="data-table">
+                                <tbody>
+                                    <tr>
+                                        <td>交易日期</td>
+                                        <td>开盘</td>
+                                        <td>最高</td>
+                                        <td>最低</td>
+                                        <td>收盘</td>
+                                        <td>成交量</td>
+                                        <td>成交额</td>
+                                    </tr>
+                                    {% for row in data %}
+                                    <tr>
+                                        <td>{{ row[1] }}</td>
+                                        <td>{{ "%.2f"|format(row[2]) }}</td>
+                                        <td>{{ "%.2f"|format(row[3]) }}</td>
+                                        <td>{{ "%.2f"|format(row[4]) }}</td>
+                                        <td>{{ "%.2f"|format(row[5]) }}</td>
+                                        <td>{{ "{:,.0f}".format(row[6]) }}</td>
+                                        <td>{{ "{:,.0f}".format(row[7]) }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            <!-- Pagination -->
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination">
+                                    <li class="page-item {% if page <= 1 %}disabled{% endif %}">
+                                        <a class="page-link" href="{{ url_for('about_page', table='stock_history', symbol=query_params.symbol, start_date=query_params.start_date, end_date=query_params.end_date, page=page-1) }}">上一页</a>
+                                    </li>
+                                    {% for p in range(1, total_pages + 1) %}
+                                        <li class="page-item {% if p == page %}active{% endif %}">
+                                            <a class="page-link" href="{{ url_for('about_page', table='stock_history', symbol=query_params.symbol, start_date=query_params.start_date, end_date=query_params.end_date, page=p) }}">{{ p }}</a>
+                                        </li>
+                                    {% endfor %}
+                                    <li class="page-item {% if page >= total_pages %}disabled{% endif %}">
+                                        <a class="page-link" href="{{ url_for('about_page', table='stock_history', symbol=query_params.symbol, start_date=query_params.start_date, end_date=query_params.end_date, page=page + 1) }}">下一页</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        {% elif query_params.symbol and not error %}
+                            <p class="mt-3">无符合条件的数据。</p>
+                        {% endif %}
                     </div>
-                    <div id="weather_hourly_container" class="table-container"
-                         {% if selected_table != 'weather_hourly' %}style="display: none;"{% endif %}>
+                    {% endif %}
 
-                        <!-- Weather Hourly Table -->
-                        <table id="weather_hourly" class="data-table">
-                            <!-- Table headers -->
-                            <tr id="weather_hourly_headers">
-                                <td>小时</td>
-                                <td>温度</td>
-                                <td>风力方向</td>
-                                <td>风级</td>
-                                <td>降水量</td>
-                                <td>相对湿度</td>
-                                <td>空气质量</td>
-                            </tr>
-                            {% for v in content %}
-                                <tr id="weather_hourly_content">
-                                    <td>{{ v[0] }}</td>
-                                    <td>{{ v[1] }}</td>
-                                    <td>{{ v[2] }}</td>
-                                    <td>{{ v[3] }}</td>
-                                    <td>{{ v[4] }}</td>
-                                    <td>{{ v[5] }}</td>
-                                    <td>{{ v[6] }}</td>
-                                </tr>
-                            {% endfor %}
-                        </table>
+                    <!-- Interest Rate Section -->
+                    {% if selected_table == 'interest_rate' %}
+                    <div id="interest_rate_container">
+                        <form method="get" action="{{ url_for('about_page') }}">
+                            <input type="hidden" name="table" value="interest_rate">
+                            <div class="form-row">
+                                <div class="col">
+                                    <label for="countrySelector" style="color: #af7360">选择国家</label>
+                                    <select id="countrySelector" class="form-control" name="country" onchange="this.form.submit()">
+                                        <option value="china" {% if query_params.country=='china' %}selected{% endif %}>中国</option>
+                                        <option value="usa" {% if query_params.country=='usa' %}selected{% endif %}>美国</option>
+                                        <option value="euro" {% if query_params.country=='euro' %}selected{% endif %}>欧洲</option>
+                                        <option value="english" {% if query_params.country=='english' %}selected{% endif %}>英国</option>
+                                        <option value="japan" {% if query_params.country=='japan' %}selected{% endif %}>日本</option>
+                                        <option value="russia" {% if query_params.country=='russia' %}selected{% endif %}>俄罗斯</option>
+                                        <option value="india" {% if query_params.country=='india' %}selected{% endif %}>印度</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+
+                        {% if error %}
+                            <div class="alert alert-danger mt-3">{{ error }}</div>
+                        {% endif %}
+
+                        {% if data is defined and data %}
+                            <table class="data-table">
+                                <tbody>
+                                    <tr>
+                                        <td>国家</td>
+                                        <td>日期</td>
+                                        <td>利率(今值)</td>
+                                        <td>预测</td>
+                                        <td>前值</td>
+                                    </tr>
+                                    {% for row in data %}
+                                    <tr>
+                                        <td>{{ row[0] }}</td>
+                                        <td>{{ row[1] }}</td>
+                                        <td>{{ row[2] }}</td>
+                                        <td>{{ row[3] }}</td>
+                                        <td>{{ row[4] }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            <!-- Pagination -->
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination">
+                                    <li class="page-item {% if page <= 1 %}disabled{% endif %}">
+                                        <a class="page-link" href="{{ url_for('about_page', table='interest_rate', country=query_params.country, page=page-1) }}">上一页</a>
+                                    </li>
+                                    {% for p in range(1, total_pages + 1) %}
+                                    <li class="page-item {% if p == page %}active{% endif %}">
+                                        <a class="page-link" href="{{ url_for('about_page', table='interest_rate', country=query_params.country, page=p) }}">{{ p }}</a>
+                                    </li>
+                                    {% endfor %}
+                                    <li class="page-item {% if page >= total_pages %}disabled{% endif %}">
+                                        <a class="page-link" href="{{ url_for('about_page', table='interest_rate', country=query_params.country, page=page + 1) }}">下一页</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        {% elif not error %}
+                             <p class="mt-3">无符合条件的数据。</p>
+                        {% endif %}
                     </div>
-                    <div id="weather_daily_container" class="table-container"
-                         {% if selected_table != 'weather_daily' %}style="display: none;"{% endif %}>
-                        <!-- Weather Daily Table -->
-                        <table id="weather_daily" class="data-table">
-                            <!-- Table headers -->
-                            <tr id="weather_daily_headers">
-                                <td>日期</td>
-                                <td>天气</td>
-                                <td>最低气温</td>
-                                <td>最高气温</td>
-                                <td>风向1</td>
-                                <td>风向2</td>
-                                <td>风级</td>
-                            </tr>
-                            {% for v in content %}
-                                <tr id="weather_daily_content">
-                                    <td>{{ v[0] }}</td>
-                                    <td>{{ v[1] }}</td>
-                                    <td>{{ v[2] }}</td>
-                                    <td>{{ v[3] }}</td>
-                                    <td>{{ v[4] }}</td>
-                                    <td>{{ v[5] }}</td>
-                                    <td>{{ v[6] }}</td>
-                                </tr>
-                            {% endfor %}
-                        </table>
+                    {% endif %}
+                </div>
+            </div>
                     </div>
                 </div>
-
             </div>
         </div>
-    </div>
+<script src="https://cdn.jsdelivr.net/npm/litepicker/dist/bundle.js"></script>
     <script>
-        // Listen for dropdown change event
-        document.getElementById("tableSelector").addEventListener("change", function () {
-            var selectedTable = this.value; // 获取所选表格的值
-            window.location.href = "/about?table=" + selectedTable;
-        });
+        // Initialize Litepicker only if the stock history section is visible
+        if (document.getElementById('date-range-picker')) {
+            const startDateInput = document.getElementById('start_date_hidden');
+            const endDateInput = document.getElementById('end_date_hidden');
+
+            const picker = new Litepicker({
+                element: document.getElementById('date-range-picker'),
+                singleMode: false,
+                format: 'YYYY-MM-DD',
+                setup: (picker) => {
+                    picker.on('selected', (date1, date2) => {
+                        // When a date range is selected, update the hidden input fields
+                        if (date1 && date2) {
+                            startDateInput.value = date1.format('YYYY-MM-DD');
+                            endDateInput.value = date2.format('YYYY-MM-DD');
+                        }
+                    });
+                }
+            });
+
+            // If start and end dates already exist (e.g., from a previous query), set them in the picker
+            if (startDateInput.value && endDateInput.value) {
+                picker.setDateRange(startDateInput.value, endDateInput.value);
+            }
+        }
     </script>
-    <footer class="row credit">
-        <div class="col col-md-12">
-            <div id="templatemo_footer">
-                © 2024.All rights reserved.
+        <footer class="row credit">
+            <div class="col col-md-12">
+                <div id="templatemo_footer">
+                    © 2024.All rights reserved.
+                </div>
             </div>
-        </div>
-    </footer>
+        </footer>
+    </div>
 </div>
 </body>
 </html>

@@ -23,11 +23,11 @@
                 </div>
                 <nav id="main_nav">
                     <ul class="nav">
-                        <li><a href="/index">首页</a></li>
+                        <li><a href="/">首页</a></li>
                         <li><a href="/about">数据收集</a></li>
                         <li><a href="/services">未来天气预报</a></li>
                         <li><a href="/portfolio">空气质量</a></li>
-                        <li class="active"><a href="/contact">全年空气质量总和分析</a></li>
+                        <li class="active"><a href="/contact">A股市场数据看板</a></li>
                     </ul>
                 </nav>
                 <form action="#" method="get" class="navbar-form" role="search">
@@ -45,13 +45,23 @@
             <div id="right_container" class="col col-md-9 col-sm-12">
                 <div class="row">
                     <div class="col col-md-12">
-                        <h2>全年空气质量总和分析</h2>
+                        <h2>A股市场数据看板</h2>
                     </div>
                 </div>
                 {% for jsfile_name in script_list %}
                     <script src="{{ host }}/{{ jsfile_name }}.js"></script>
                 {% endfor %}
-                {{ myechart|safe }}
+        <form method="get" action="{{ url_for('contact_page') }}">
+            <label for="chartType">选择图表类型:</label>
+            <select id="chartType" name="chart_type" onchange="this.form.submit()">
+                <option value="rose" {% if chart_type == 'rose' %}selected{% endif %}>Timeline-Pie：A股各板块近5年上市获批数量</option>
+                <option value="bar" {% if chart_type == 'bar' %}selected{% endif %}>柱状图：沪深两市近5年融资融券日均余额</option>
+            </select>
+        </form>
+
+        <div id="myChart">
+            {{ myechart|safe }}
+        </div>
             </div>
                 <footer class="row credit">
                     <div class="col col-md-12">
@@ -65,4 +75,14 @@
         </div>
 </div></div>
 </body>
+<script>
+        window.addEventListener('load', (_) => {
+
+            document.getElementById("chartType").addEventListener("change", function () {
+                var selectedChartType = this.value;
+                console.log("Selected chart type:", selectedChartType);  // 打印选择的图表类型
+                window.location.href = "/contact?chart_type=" + selectedChartType;
+        });
+    });
+    </script>
 </html>

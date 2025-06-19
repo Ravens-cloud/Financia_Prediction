@@ -24,11 +24,11 @@
                 </div>
                 <nav id="main_nav">
                     <ul class="nav">
-                        <li><a href="/index">首页</a></li>
-                        <li><a href="/about">数据收集</a></li>
-                        <li class="active"><a href="/services">未来天气预报</a></li>
-                        <li><a href="/portfolio">空气质量</a></li>
-                        <li><a href="/contact">全年空气质量总和分析</a></li>
+                        <li ><a href="/root">新闻首页</a></li>
+                        <li><a href="/about">数据展示</a></li>
+                        <li class="active"><a href="/services">静态图表</a></li>
+                        <li ><a href="/portfolio">K线图</a></li>
+                        <li><a href="/contact">A股市场数据看板</a></li>
                     </ul>
                 </nav> <!-- nav -->
                 <form action="#" method="get" class="navbar-form" role="search">
@@ -48,14 +48,19 @@
             <div class="col col-md-12">
             <h2>Weather Forecast</h2>
         </div>
+        <form method="get" action="{{ url_for('services_page') }}">
         <label for="chartType" style="color: #af7360">Select Chart Type:</label>
-        <select id="chartType" name="chart_type">
-            <option value="next_24_hours" {% if chart_type == 'next_24_hours' %}selected{% endif %}>Next 24 Hours</option>
-              <option value="next_14_days" {% if chart_type == 'next_14_days' %}selected{% endif %}>Next 14 Days</option>
+        <select id="chartType" name="chart_type" onchange="this.form.submit()">
+            <option value="wordcloud" {% if chart_type=='wordcloud' %}selected{% endif %}>新闻关键字词云图</option>
+            <option value="funnel" {% if chart_type=='funnel' %}selected{% endif %}>期货品种风险等级分布漏斗图</option>
+            <option value="radar" {% if chart_type=='radar' %}selected{% endif %}>中美经济指标雷达图</option>
+            <option value="fund_line" {% if chart_type=='fund_line' %}selected{% endif %}>基金会员数近3年变化</option>
         </select>
+        </form>
         <div id="myChart">
             {{ myechart|safe }}
         </div>
+
     </div>
 </div>
 

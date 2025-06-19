@@ -35,11 +35,11 @@
                 </div>
                 <nav id="main_nav">
                     <ul class="nav">
-                        <li><a href="/index">首页</a></li>
-                        <li><a href="/about">数据收集</a></li>
-                        <li><a href="/services">未来天气预报</a></li>
-                        <li class="active"><a href="/portfolio">空气质量</a></li>
-                        <li><a href="/contact">全年空气质量总和分析</a></li>
+                        <li ><a href="/root">新闻首页</a></li>
+                        <li><a href="/about">数据展示</a></li>
+                        <li><a href="/services">静态图表</a></li>
+                        <li class="active"><a href="/portfolio">K线图</a></li>
+                        <li><a href="/contact">A股市场数据看板</a></li>
                     </ul>
                 </nav> <!-- nav -->
                 <form action="#" method="get" class="navbar-form" role="search">
@@ -57,13 +57,15 @@
             <div id="right_container" class="col col-md-9 col-sm-12">
                 <div class="row">
                     <div class="col col-md-12">
-                        <h2>平均空气质量对比</h2>
+                        <h2>K线图</h2>
                     </div>
                 </div>
                 {% for jsfile_name in script_list %}
                     <script src="{{ host }}/{{ jsfile_name }}.js"></script>
                 {% endfor %}
-                {{ myechart|safe }}
+                <div style="background-color:#ffffff;">
+                    {{ myechart|safe }}
+                </div>
             </div>
         </div>
         <footer class="row credit">
